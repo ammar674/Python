@@ -1,0 +1,15 @@
+QUESTION :1 
+db.city.find({$and:[{population:{$lt:30}},{population:{$ne:0}} ]}).limit(2);
+QUESTION 2:
+db.city.find({timezone:"Asia/Jakarta"}).count();
+QUESTION 3:
+db.city.find({timezone:'Asia/Karachi',country:'PK'}).sort({population:-1});
+QUESTION 4:
+db.city.getIndexes();
+db.city.createIndex({population:1});
+db.city.dropIndex({population:1});
+QUESTION 5:
+1.{timezone:"Europe/Andorra"}
+2.{country:"AR",population:{$gt:12955000}}
+3.{"location.longitude":1.6}
+{location:1,population:1}

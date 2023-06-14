@@ -1,0 +1,101 @@
+TASK 1:
+CREATE VIEW EMPFR AS
+    ->      SELECT *
+    ->      FROM EMPLOYEE
+    ->      WHERE EMP_NUM=100;
+ UPDATE EMPFR  SET EMP_PHONE = '324-9652'  WHERE EMP_NUM = 100;
+ select * from EMPFR;
++---------+-----------+------------+-----------+------------+---------------+---------------+-----------+-----------+
+| EMP_NUM | EMP_TITLE | EMP_LNAME  | EMP_FNAME | EMP_DOB    | EMP_HIRE_DATE | EMP_AREA_CODE | EMP_PHONE | PARK_CODE |
++---------+-----------+------------+-----------+------------+---------------+---------------+-----------+-----------+
+|     100 | Ms        | Calderdale | Emma      | 1972-06-15 | 1992-03-15    | 0181          | 324-9652  | FR1001    |
++---------+-----------+------------+-----------+------------+---------------+---------------+-----------+-----------+
+1 row in set (0.000 sec)
+
+TASK 2:
+CREATE  view EMP_DETAILS AS SELECT EMP_NUM,EMP.PARK_CODE,PARK_NAME,EMP_LNAME,EMP_FNAME,EMP_HIRE_DATE,EMP_DOB from EMPLOYEE EMP INNER JOIN THEMEPARK P ON EMP.PARK_CODE=P.PARK_CODE;
+SELECT * FROM EMP_DETAILS;
++---------+-----------+--------------+------------+-----------+---------------+------------+
+| EMP_NUM | PARK_CODE | PARK_NAME    | EMP_LNAME  | EMP_FNAME | EMP_HIRE_DATE | EMP_DOB    |
++---------+-----------+--------------+------------+-----------+---------------+------------+
+|     100 | FR1001    | FairyLand    | Calderdale | Emma      | 1992-03-15    | 1972-06-15 |
+|     101 | UK3452    | PleasureLand | Ricardo    | Marshel   | 1996-04-25    | 1978-03-19 |
+|     102 | FR1001    | FairyLand    | Arshad     | Arif      | 1990-12-20    | 1969-11-14 |
+|     103 | UK3452    | PleasureLand | Roberts    | Anne      | 1994-08-16    | 1974-10-16 |
+|     104 | ZA1342    | GoldTown     | Denver     | Enrica    | 2001-10-20    | 1980-11-08 |
+|     105 | FR1001    | FairyLand    | Namowa     | Mirrelle  | 2006-11-08    | 1990-03-14 |
++---------+-----------+--------------+------------+-----------+---------------+------------+
+6 rows in set (0.001 sec)
+
+TASK 3:
+SELECT EMP_FNAME,EMP_LNAME FROM EMP_DETAILS;
++-----------+------------+
+| EMP_FNAME | EMP_LNAME  |
++-----------+------------+
+| Emma      | Calderdale |
+| Marshel   | Ricardo    |
+| Arif      | Arshad     |
+| Anne      | Roberts    |
+| Enrica    | Denver     |
+| Mirrelle  | Namowa     |
++-----------+------------+
+6 rows in set (0.000 sec)
+TASK 4:
+create view TICKET_SALES as select park_name, min(line_price), max(line_price), avg(line_price) from SALES_LINE sal join SALES sa on sal.TRANSACTION_NO=sa.TRANSACTION_NO join THEMEPARK th on th.park_code=sa.park_code group by park_name;
+Query OK, 0 rows affected (0.002 sec)
+
+MariaDB [themepark]> select * from TICKET_SALES
+    -> ;
++--------------+-----------------+-----------------+-----------------+
+| park_name    | min(line_price) | max(line_price) | avg(line_price) |
++--------------+-----------------+-----------------+-----------------+
+| FairyLand    |           14.99 |          139.96 |       50.232500 |
+| GoldTown     |           12.12 |          114.68 |       47.637778 |
+| PleasureLand |           21.98 |          168.40 |       60.785714 |
++--------------+-----------------+-----------------+-----------------+
+3 rows in set (0.002 sec)
+TASK 5:
+ SELECT DISTINCT (DATE_FORMAT(SALE_DATE,"%a-%d-%m-%y")) FROM SALES;
++----------------------------------------+
+| (DATE_FORMAT(SALE_DATE,"%a-%d-%m-%y")) |
++----------------------------------------+
+| Fri-18-05-07                           |
++----------------------------------------+
+1 row in set (0.000 sec)
+TASK 6:
+SELECT EMP_FNAME,EMP_LNAME,UPPER(CONCAT(DATE_FORMAT(EMP_DOB,"%m"),"01",SUBSTR(EMP_LNAME,1,6))) AS USERID FROM EMPLOYEE;
++-----------+------------+------------+
+| EMP_FNAME | EMP_LNAME  | USERID     |
++-----------+------------+------------+
+| Emma      | Calderdale | 0601CALDER |
+| Marshel   | Ricardo    | 0301RICARD |
+| Arif      | Arshad     | 1101ARSHAD |
+| Anne      | Roberts    | 1001ROBERT |
+| Enrica    | Denver     | 1101DENVER |
+| Mirrelle  | Namowa     | 0301NAMOWA |
++-----------+------------+------------+
+TASK 7:
+ SELECT EMP_FNAME,EMP_LNAME,EMP_DOB FROM EMPLOYEE WHERE DATE_FORMAT(EMP_DOB,"%d")='14';
++-----------+-----------+------------+
+| EMP_FNAME | EMP_LNAME | EMP_DOB    |
++-----------+-----------+------------+
+| Arif      | Arshad    | 1969-11-14 |
+| Mirrelle  | Namowa    | 1990-03-14 |
++-----------+-----------+------------+
+2 rows in set (0.001 sec)
+TASK 8 :
+SELECT CONCAT(EMP_FNAME,"  ",EMP_LNAME) AS NAME ,LOWER(CONCAT(SUBSTR(EMP_PHONE,1,3),SUBSTR(EMP_FNAME,1,2))) AS USER_PASSWORD FROM EMPLOYEE;
++------------------+---------------+
+| NAME             | USER_PASSWORD |
++------------------+---------------+
+| Emma  Calderdale | 324em         |
+| Marshel  Ricardo | 324ma         |
+| Arif  Arshad     | 675ar         |
+| Anne  Roberts    | 898an         |
+| Enrica  Denver   | 504en         |
+| Mirrelle  Namowa | 890mi         |
++------------------+---------------+
+6 rows in set (0.000 sec)
+TASK 9:
+
+ 

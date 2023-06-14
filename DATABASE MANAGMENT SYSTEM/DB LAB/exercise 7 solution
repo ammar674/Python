@@ -1,0 +1,103 @@
+Ex:1
+MariaDB [organization]> select * from emp where salary =(select max(salary) from emp)
+    -> ;
++-------+-------+-----------+------+------------+--------+------------+--------+
+| empno | ename | job       | mgr  | hiredate   | salary | commission | deptno |
++-------+-------+-----------+------+------------+--------+------------+--------+
+|  7839 | King  | President | NULL | 2021-07-31 |   6500 |       NULL |     10 |
++-------+-------+-----------+------+------------+--------+------------+--------+
+Ex:2
+MariaDB [organization]> select * from emp where deptno = (select deptno from dept  where dname = "Sales" );
++-------+--------+----------+------+------------+--------+------------+--------+
+| empno | ename  | job      | mgr  | hiredate   | salary | commission | deptno |
++-------+--------+----------+------+------------+--------+------------+--------+
+|  7499 | Allen  | Salesman | 7566 | 2021-07-31 |   2000 |        500 |     30 |
+|  7521 | Ward   | Salesman | 7698 | 2021-07-31 |   1650 |        800 |     30 |
+|  7654 | Martin | Salesman | 7698 | 2021-07-31 |   1650 |       1400 |     30 |
+|  7698 | Blake  | Manager  | 7839 | 2021-07-31 |   3250 |       NULL |     30 |
+|  7844 | Turner | Salesman | 7698 | 2021-07-31 |   1900 |          0 |     30 |
+|  7900 | James  | Clerk    | 7698 | 2021-07-31 |   1350 |       NULL |     30 |
++-------+--------+----------+------+------------+--------+------------+--------+
+Ex:3
+MariaDB [organization]> select * from emp where deptno = (select deptno from dept  where dname = "Accounting" );
++-------+--------+-----------+------+------------+--------+------------+--------+
+| empno | ename  | job       | mgr  | hiredate   | salary | commission | deptno |
++-------+--------+-----------+------+------------+--------+------------+--------+
+|  7782 | Clark  | Manager   | 7839 | 2021-07-31 |   2850 |       NULL |     10 |
+|  7839 | King   | President | NULL | 2021-07-31 |   6500 |       NULL |     10 |
+|  7934 | Miller | Clerk     | 7782 | 2021-07-31 |   1700 |       NULL |     10 |
++-------+--------+-----------+------+------------+--------+------------+--------+
+Ex:4
+MariaDB [organization]> select count(*) from emp where deptno = (select deptno from dept  where dname = "Sales" );
++----------+
+| count(*) |
++----------+
+|        6 |
++----------+
+Ex :5
+MariaDB [organization]> select * from emp where salary > all(select max(salary)  from emp where deptno = 30 );
++-------+-------+-----------+------+------------+--------+------------+--------+
+| empno | ename | job       | mgr  | hiredate   | salary | commission | deptno |
++-------+-------+-----------+------+------------+--------+------------+--------+
+|  7566 | Jones | Manager   | 7839 | 2021-07-31 |   3375 |       NULL |     20 |
+|  7788 | Scott | Analyst   | 7566 | 2021-07-31 |   3500 |       NULL |     20 |
+|  7839 | King  | President | NULL | 2021-07-31 |   6500 |       NULL |     10 |
+|  7902 | Ford  | Analyst   | 7566 | 2021-07-31 |   3500 |       NULL |     20 |
++-------+-------+-----------+------+------------+--------+------------+--------+
+
+Ex :6
+MariaDB [organization]> select * from emp where salary < all(select min(salary)  from emp where deptno= 30 );
++-------+-------+-------+------+------------+--------+------------+--------+
+| empno | ename | job   | mgr  | hiredate   | salary | commission | deptno |
++-------+-------+-------+------+------------+--------+------------+--------+
+|  7369 | Smith | Clerk | 7902 | 2021-07-31 |   1200 |       NULL |     20 |
++-------+-------+-------+------+------------+--------+------------+--------+
+1 row in set (0.001 sec)
+Ex:7
+MariaDB [organization]> select *  from dept where deptno not in (select deptno from emp);
++--------+------------+----------+
+| deptno | dname      | location |
++--------+------------+----------+
+|     40 | Operations | Boston   |
++--------+------------+----------+
+Ex:8
+MariaDB [organization]> SELECT ename, salary FROM emp e1 WHERE salary > (   SELECT AVG(salary)   FROM emp e2   WHERE e1.deptno = e2.deptno );
++-------+--------+
+| ename | salary |
++-------+--------+
+| Allen |   2000 |
+| Jones |   3375 |
+| Blake |   3250 |
+| Scott |   3500 |
+| King  |   6500 |
+| Ford  |   3500 |
++-------+--------+
+6 rows in set (0.001 sec)
+""""""""""""""""""""""""""""""""""""""""""""""""""ACCORDING TO DEPARTMENT"""""""""""""""""""""""""""""""""""""""""""""""""""""""
+MariaDB [organization]> SELECT ename, salary FROM emp e1 WHERE salary > (   SELECT AVG(salary)   FROM emp e2   WHERE e1.deptno = 30 );
++-------+--------+
+| ename | salary |
++-------+--------+
+| Blake |   3250 |
++-------+--------+
+1 row in set (0.001 sec)
+
+MariaDB [organization]> SELECT ename, salary FROM emp e1 WHERE salary > (   SELECT AVG(salary)   FROM emp e2   WHERE e1.deptno = 10 );
++-------+--------+
+| ename | salary |
++-------+--------+
+| Clark |   2850 |
+| King  |   6500 |
++-------+--------+
+2 rows in set (0.001 sec)
+
+MariaDB [organization]> SELECT ename, salary FROM emp e1 WHERE salary > (   SELECT AVG(salary)   FROM emp e2   WHERE e1.deptno = 20 );
++-------+--------+
+| ename | salary |
++-------+--------+
+| Jones |   3375 |
+| Scott |   3500 |
+| Ford  |   3500 |
++-------+--------+
+3 rows in set (0.001 sec)
+
